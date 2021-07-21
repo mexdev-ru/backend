@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  user:
+    container_name: user_service
+    image: user_service
+    build: .
+    ports:
+      - 8002:8002
+    working_dir: /app
+    volumes:
+      - ./:/app
+    environment:
+      "spring.datasource.url": 'jdbc:postgresql://data_base:5432/customers?User=root&password=admin'
+    depends_on:
+      - data_base
+
+
+  data_base:
+    container_name: data_base
+    image: postgres:13.1-alpine
+    ports:
+    - 5432:5432
+    volumes:
+      - my_db_postgresql:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: customers
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: admin
+volumes:
+  my_db_postgresql:
