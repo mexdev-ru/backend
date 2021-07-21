@@ -14,6 +14,7 @@ import java.util.UUID;
 @RequestMapping("user")
 public class UserController {
 
+    @Autowired
     private TemplateService<User> userService;
 
     @GetMapping("/{id}")
