@@ -1,32 +1,32 @@
 package ru.mexdev.application.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
-import ru.mexdev.application.entity.UuidIdentification;
+import ru.mexdev.application.entity.User;
+import ru.mexdev.application.repository.UserRepository;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
-public class TemplateService<T extends UuidIdentification> {
+public class UserService {
 
     @Autowired
-    private JpaRepository<T, UUID> repository;
+    private UserRepository repository;
 
-    public void create(T element) {
+    public void create(User element) {
         repository.save(element);
     }
 
-    public List<T> readAll() {
+    public List<User> readAll() {
         return repository.findAll();
     }
 
-    public T read(UUID id) {
-        return repository.getById(id);
+    public User read(UUID id) {
+        return repository.findById(id).orElse(null);
     }
 
-    public boolean update(T element, UUID id) {
+    public boolean update(User element, UUID id) {
         if (repository.existsById(id)) {
             element.setUuid(id);
             repository.save(element);

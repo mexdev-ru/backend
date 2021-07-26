@@ -1,14 +1,15 @@
 package ru.mexdev.application.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "companies")
+@Table(name = "roles")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class RoleInCompany implements UuidIdentification {
+public class RoleInCompany {
     @Id
     @Column(name = "uuid")
     @GeneratedValue
@@ -17,8 +18,18 @@ public class RoleInCompany implements UuidIdentification {
     @Column(name = "company_uuid")
     private UUID companyUuid;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "role")
+    private EmployeeRole role;
+
+    @Autowired
+    public RoleInCompany() {
+    }
+
+    @Autowired
+    public RoleInCompany(UUID companyUuid, EmployeeRole role) {
+        this.companyUuid = companyUuid;
+        this.role = role;
+    }
 
     public UUID getCompanyUuid() {
         return companyUuid;
@@ -28,20 +39,18 @@ public class RoleInCompany implements UuidIdentification {
         this.companyUuid = companyUuid;
     }
 
-    public String getName() {
-        return name;
+    public EmployeeRole getRole() {
+        return role;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRole(EmployeeRole role) {
+        this.role = role;
     }
 
-    @Override
     public UUID getUuid() {
         return uuid;
     }
 
-    @Override
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
@@ -51,7 +60,7 @@ public class RoleInCompany implements UuidIdentification {
         return "RoleInCompany{" +
                 "uuid=" + uuid +
                 ", companyUuid=" + companyUuid +
-                ", name='" + name + '\'' +
+                ", role='" + role + '\'' +
                 '}';
     }
 }

@@ -6,7 +6,7 @@ services:
     image: user_service
     build: .
     ports:
-      - 8002:8002
+      - 8080:8080
     working_dir: /app
     volumes:
       - ./:/app

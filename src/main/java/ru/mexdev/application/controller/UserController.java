@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mexdev.application.entity.User;
-import ru.mexdev.application.service.TemplateService;
+import ru.mexdev.application.service.UserService;
 
 import java.util.List;
 import java.util.UUID;
@@ -15,7 +15,7 @@ import java.util.UUID;
 public class UserController {
 
     @Autowired
-    private TemplateService<User> userService;
+    private UserService userService;
 
     @GetMapping("/{id}")
     public ResponseEntity<User> read(@PathVariable(name = "id") UUID id) {

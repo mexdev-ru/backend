@@ -8,7 +8,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "companies")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Company implements UuidIdentification {
+public class Company {
     @Id
     @Column(name = "uuid")
     @GeneratedValue
@@ -25,12 +25,10 @@ public class Company implements UuidIdentification {
         this.name = name;
     }
 
-    @Override
     public UUID getUuid() {
         return uuid;
     }
 
-    @Override
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
