@@ -24,7 +24,6 @@ public class CompanyService {
     @Autowired
     private RoleRepository roleRepository;
 
-    //TODO: company ID is null
     public boolean create(Company element) {
         if (companyRepository.findByName(element.getName()).orElse(null) == null) {
             RoleInCompany role = new RoleInCompany(element.getUuid(), EmployeeRole.FOUNDER);
@@ -33,6 +32,7 @@ public class CompanyService {
             employeeRepository.save(employee);
             companyRepository.save(element);
             role.setCompanyUuid(element.getUuid());
+            roleRepository.save(role);
             return true;
         }
         return false;
