@@ -1,66 +1,95 @@
 package ru.mexdev.application.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "roles")
+@Table(name = "roles_in_companies")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class RoleInCompany {
-    @Id
-    @Column(name = "uuid")
-    @GeneratedValue
-    private UUID uuid;
+  @Id
+  @Column(name = "uuid")
+  @GeneratedValue
+  private UUID uuid;
 
-    @Column(name = "company_uuid")
-    private UUID companyUuid;
+  @OneToOne
+  @JoinColumn
+  private Company company;
 
-    @Column(name = "role")
-    private EmployeeRole role;
+  @OneToOne
+  @JoinColumn
+  private Role role;
 
-    @Autowired
-    public RoleInCompany() {
-    }
+  @OneToOne
+  @JoinColumn
+  private Employee roleIssuer;
 
-    @Autowired
-    public RoleInCompany(UUID companyUuid, EmployeeRole role) {
-        this.companyUuid = companyUuid;
-        this.role = role;
-    }
+  @ManyToOne
+  @JoinColumn
+  private Employee employee;
 
-    public UUID getCompanyUuid() {
-        return companyUuid;
-    }
+  public RoleInCompany() {
+  }
 
-    public void setCompanyUuid(UUID companyUuid) {
-        this.companyUuid = companyUuid;
-    }
+  public RoleInCompany(Company company, Role role, Employee roleIssuer, Employee employee) {
+    this.company = company;
+    this.role = role;
+    this.roleIssuer = roleIssuer;
+    this.employee = employee;
+  }
 
-    public EmployeeRole getRole() {
-        return role;
-    }
+  public UUID getUuid() {
+    return uuid;
+  }
 
-    public void setRole(EmployeeRole role) {
-        this.role = role;
-    }
+  public void setUuid(UUID uuid) {
+    this.uuid = uuid;
+  }
 
-    public UUID getUuid() {
-        return uuid;
-    }
+  public Company getCompany() {
+    return company;
+  }
 
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
+  public void setCompany(Company company) {
+    this.company = company;
+  }
 
-    @Override
-    public String toString() {
-        return "RoleInCompany{" +
-                "uuid=" + uuid +
-                ", companyUuid=" + companyUuid +
-                ", role='" + role + '\'' +
-                '}';
-    }
+  public Role getRole() {
+    return role;
+  }
+
+  public void setRole(Role role) {
+    this.role = role;
+  }
+
+  public Employee getRoleIssuer() {
+    return roleIssuer;
+  }
+
+  public void setRoleIssuer(Employee roleIssuer) {
+    this.roleIssuer = roleIssuer;
+  }
+
+  @JsonIgnore
+  public Employee getEmployee() {
+    return employee;
+  }
+
+  public void setEmployee(Employee employee) {
+    this.employee = employee;
+  }
+
+  @Override
+  public String toString() {
+    return "RoleInCompany{" +
+        "uuid=" + uuid +
+        ", company=" + company +
+        ", role=" + role +
+        ", roleIssuer=" + roleIssuer +
+        ", employee=" + employee.getUuid() +
+        '}';
+  }
 }

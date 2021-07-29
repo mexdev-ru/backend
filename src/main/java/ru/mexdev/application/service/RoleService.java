@@ -2,51 +2,47 @@ package ru.mexdev.application.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mexdev.application.entity.RoleInCompany;
-import ru.mexdev.application.repository.CompanyRepository;
+import ru.mexdev.application.entity.Role;
 import ru.mexdev.application.repository.RoleRepository;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class RoleService {
 
-    @Autowired
-    private RoleRepository roleRepository;
-    @Autowired
-    private CompanyService companyService;
+  @Autowired
+  private RoleRepository repository;
 
-    public boolean create(RoleInCompany element) {
-        if (companyService.read(element.getCompanyUuid()) != null) {
-            roleRepository.save(element);
-            return true;
-        }
-        return false;
+  public boolean create(Role element) {
+    if (repository.findByName(element.getName()).orElse(null) == null) {
+      repository.save(element);
+      return true;
     }
+    return false;
+  }
 
-    public List<RoleInCompany> readAll() {
-        return roleRepository.findAll();
-    }
+  public List<Role> readAll() {
+    return repository.findAll();
+  }
 
-    public RoleInCompany read(UUID id) {
-        return roleRepository.findById(id).orElse(null);
-    }
+  public Role read(Long id) {
+    return repository.findById(id).orElse(null);
+  }
 
-    public boolean update(RoleInCompany element, UUID id) {
-        if (roleRepository.existsById(id)) {
-            element.setUuid(id);
-            roleRepository.save(element);
-            return true;
-        }
-        return false;
+  public boolean update(Role element, Long id) {
+    if (repository.existsById(id)) {
+      element.setId(id);
+      repository.save(element);
+      return true;
     }
+    return false;
+  }
 
-    public boolean delete(UUID id) {
-        if (roleRepository.existsById(id)) {
-            roleRepository.deleteById(id);
-            return true;
-        }
-        return false;
+  public boolean delete(Long id) {
+    if (repository.existsById(id)) {
+      repository.deleteById(id);
+      return true;
     }
+    return false;
+  }
 }

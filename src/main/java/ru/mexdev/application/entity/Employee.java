@@ -1,9 +1,10 @@
 package ru.mexdev.application.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -15,21 +16,11 @@ public class Employee {
     @GeneratedValue
     private UUID uuid;
 
-    @OneToOne
-    @JoinColumn(name = "role")
-    private RoleInCompany role;
+    @OneToMany(mappedBy = "employee", orphanRemoval = true)
+    private List<RoleInCompany> roles;
 
-    @Column(name = "id_of_role_issuer")
-    private UUID idOfRoleIssuer;
-
-    @Autowired
     public Employee() {
-    }
-
-    @Autowired
-    public Employee(RoleInCompany role, UUID idOfRoleIssuer) {
-        this.role = role;
-        this.idOfRoleIssuer = idOfRoleIssuer;
+        this.roles = new ArrayList<>();
     }
 
     public UUID getUuid() {
@@ -40,28 +31,19 @@ public class Employee {
         this.uuid = uuid;
     }
 
-    public RoleInCompany getRole() {
-        return role;
+    public List<RoleInCompany> getRoles() {
+        return roles;
     }
 
-    public void setRole(RoleInCompany role) {
-        this.role = role;
-    }
-
-    public UUID getIdOfRoleIssuer() {
-        return idOfRoleIssuer;
-    }
-
-    public void setIdOfRoleIssuer(UUID idOfRoleIssuer) {
-        this.idOfRoleIssuer = idOfRoleIssuer;
+    public void setRoles(List<RoleInCompany> roles) {
+        this.roles = roles;
     }
 
     @Override
     public String toString() {
         return "Employee{" +
-                "uuid=" + uuid +
-                ", role=" + role +
-                ", idOfRoleIssuer=" + idOfRoleIssuer +
-                '}';
+            "uuid=" + uuid +
+            ", roles=" + roles +
+            '}';
     }
 }

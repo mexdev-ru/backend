@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mexdev.application.entity.Employee;
+import ru.mexdev.application.entity.RoleInCompany;
 import ru.mexdev.application.service.EmployeeService;
 
 import java.util.List;
@@ -42,11 +43,17 @@ public class EmployeeController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
+    @PutMapping("/add_role/{id}")
+    public ResponseEntity<?> addRole(@PathVariable(name = "id") UUID id, @RequestBody RoleInCompany role) {
+        return employeeService.addRole(role, id)
+            ? new ResponseEntity<>(HttpStatus.OK)
+            : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+    }
+
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Employee employee) {
-        return employeeService.create(employee)
-                ? new ResponseEntity<>(HttpStatus.CREATED)
-                : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        employeeService.create(employee);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
