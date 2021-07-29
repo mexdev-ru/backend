@@ -11,13 +11,14 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:8081")
 @RequestMapping("user")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping("/{id}")
+    @RequestMapping(method = RequestMethod.GET, path = "/{id}")
     public ResponseEntity<User> read(@PathVariable(name = "id") UUID id) {
         final User user = userService.read(id);
 
@@ -26,7 +27,7 @@ public class UserController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/all")
+    @RequestMapping(method = RequestMethod.GET, path = "/all")
     public ResponseEntity<List<User>> read() {
         final List<User> users = userService.readAll();
 
@@ -35,20 +36,20 @@ public class UserController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/{id}")
+    @RequestMapping(method = RequestMethod.PUT, path = "/{id}")
     public ResponseEntity<?> update(@PathVariable(name = "id") UUID id, @RequestBody User user) {
         return userService.update(user, id)
                 ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-    @PostMapping
+    @RequestMapping(method = RequestMethod.POST, path = "")
     public ResponseEntity<?> create(@RequestBody User user) {
         userService.create(user);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{id}")
+    @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") UUID id) {
         return userService.delete(id)
                 ? new ResponseEntity<>(HttpStatus.OK)

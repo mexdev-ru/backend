@@ -12,13 +12,14 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:8081")
 @RequestMapping("employee")
 public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
 
-    @GetMapping("/{id}")
+    @RequestMapping(method = RequestMethod.GET, path = "/{id}")
     public ResponseEntity<Employee> read(@PathVariable(name = "id") UUID id) {
         final Employee employee = employeeService.read(id);
 
@@ -27,7 +28,7 @@ public class EmployeeController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/all")
+    @RequestMapping(method = RequestMethod.GET, path = "/all")
     public ResponseEntity<List<Employee>> read() {
         final List<Employee> roles = employeeService.readAll();
 
@@ -36,27 +37,27 @@ public class EmployeeController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/{id}")
+    @RequestMapping(method = RequestMethod.PUT, path = "/{id}")
     public ResponseEntity<?> update(@PathVariable(name = "id") UUID id, @RequestBody Employee employee) {
         return employeeService.update(employee, id)
                 ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-    @PutMapping("/add_role/{id}")
+    @RequestMapping(method = RequestMethod.PUT, path = "/add_role/{id}")
     public ResponseEntity<?> addRole(@PathVariable(name = "id") UUID id, @RequestBody RoleInCompany role) {
         return employeeService.addRole(role, id)
             ? new ResponseEntity<>(HttpStatus.OK)
             : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-    @PostMapping
+    @RequestMapping(method = RequestMethod.POST, path = "")
     public ResponseEntity<?> create(@RequestBody Employee employee) {
         employeeService.create(employee);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{id}")
+    @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") UUID id) {
         return employeeService.delete(id)
                 ? new ResponseEntity<>(HttpStatus.OK)

@@ -10,13 +10,14 @@ import ru.mexdev.application.service.RoleService;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:8081")
 @RequestMapping("role")
 public class RoleController {
   
   @Autowired
   private RoleService roleService;
 
-  @GetMapping("/{id}")
+  @RequestMapping(method = RequestMethod.GET, path = "/{id}")
   public ResponseEntity<Role> read(@PathVariable(name = "id") Long id) {
     final Role role = roleService.read(id);
 
@@ -25,7 +26,7 @@ public class RoleController {
         : new ResponseEntity<>(HttpStatus.NOT_FOUND);
   }
 
-  @GetMapping("/all")
+  @RequestMapping(method = RequestMethod.GET, path = "/all")
   public ResponseEntity<List<Role>> read() {
     final List<Role> users = roleService.readAll();
 
@@ -34,20 +35,20 @@ public class RoleController {
         : new ResponseEntity<>(HttpStatus.NOT_FOUND);
   }
 
-  @PutMapping("/{id}")
+  @RequestMapping(method = RequestMethod.PUT, path = "/{id}")
   public ResponseEntity<?> update(@PathVariable(name = "id") Long id, @RequestBody Role role) {
     return roleService.update(role, id)
         ? new ResponseEntity<>(HttpStatus.OK)
         : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
   }
 
-  @PostMapping
+  @RequestMapping(method = RequestMethod.POST, path = "")
   public ResponseEntity<?> create(@RequestBody Role role) {
     roleService.create(role);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
-  @DeleteMapping("/{id}")
+  @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
   public ResponseEntity<?> delete(@PathVariable(name = "id") Long id) {
     return roleService.delete(id)
         ? new ResponseEntity<>(HttpStatus.OK)

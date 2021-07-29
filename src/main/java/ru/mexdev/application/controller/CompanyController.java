@@ -11,13 +11,14 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:8081")
 @RequestMapping("company")
 public class CompanyController {
 
     @Autowired
     private CompanyService companyService;
 
-    @GetMapping("/{id}")
+    @RequestMapping(method = RequestMethod.GET, path = "/{id}")
     public ResponseEntity<Company> read(@PathVariable(name = "id") UUID id) {
         final Company company = companyService.read(id);
 
@@ -26,7 +27,7 @@ public class CompanyController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/all")
+    @RequestMapping(method = RequestMethod.GET, path = "/all")
     public ResponseEntity<List<Company>> read() {
         final List<Company> users = companyService.readAll();
 
@@ -35,21 +36,21 @@ public class CompanyController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/{id}")
+    @RequestMapping(method = RequestMethod.PUT, path = "/{id}")
     public ResponseEntity<?> update(@PathVariable(name = "id") UUID id, @RequestBody Company company) {
         return companyService.update(company, id)
                 ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-    @PostMapping
+    @RequestMapping(method = RequestMethod.POST, path = "")
     public ResponseEntity<?> create(@RequestBody Company company) {
         return companyService.create(company)
                 ? new ResponseEntity<>(HttpStatus.CREATED)
                 : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @DeleteMapping("/{id}")
+    @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") UUID id) {
         return companyService.delete(id)
                 ? new ResponseEntity<>(HttpStatus.OK)
