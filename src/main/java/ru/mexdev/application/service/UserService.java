@@ -11,35 +11,35 @@ import java.util.UUID;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository repository;
+  @Autowired
+  private UserRepository repository;
 
-    public void create(User element) {
-        repository.save(element);
-    }
+  public void create(User element) {
+    repository.save(element);
+  }
 
-    public List<User> readAll() {
-        return repository.findAll();
-    }
+  public List<User> readAll() {
+    return repository.findAll();
+  }
 
-    public User read(UUID id) {
-        return repository.findById(id).orElse(null);
-    }
+  public User read(UUID id) {
+    return repository.findById(id).orElse(null);
+  }
 
-    public boolean update(User element, UUID id) {
-        if (repository.existsById(id)) {
-            element.setUuid(id);
-            repository.save(element);
-            return true;
-        }
-        return false;
+  public boolean update(User element, UUID id) {
+    if (repository.existsById(id)) {
+      element.setUuid(id);
+      repository.save(element);
+      return true;
     }
+    return false;
+  }
 
-    public boolean delete(UUID id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
-            return true;
-        }
-        return false;
+  public boolean delete(UUID id) {
+    if (repository.existsById(id)) {
+      repository.deleteById(id);
+      return true;
     }
+    return false;
+  }
 }

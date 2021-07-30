@@ -44,8 +44,9 @@ public class RoleController {
 
   @RequestMapping(method = RequestMethod.POST, path = "")
   public ResponseEntity<?> create(@RequestBody Role role) {
-    roleService.create(role);
-    return new ResponseEntity<>(HttpStatus.CREATED);
+    return roleService.create(role)
+        ? new ResponseEntity<>(HttpStatus.CREATED)
+        : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
   }
 
   @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")

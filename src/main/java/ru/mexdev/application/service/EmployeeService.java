@@ -18,10 +18,6 @@ public class EmployeeService {
   private RoleInCompanyService roleInCompanyService;
 
   public void create(Employee element) {
-    //RoleInCompany list is null, and after addRole
-    for (RoleInCompany role : element.getRoles()) {
-      role.setEmployee(element);
-    }
     employeeRepository.save(element);
   }
 

@@ -11,39 +11,39 @@ import java.util.UUID;
 @Table(name = "employees")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Employee {
-    @Id
-    @Column(name = "uuid")
-    @GeneratedValue
-    private UUID uuid;
+  @Id
+  @Column(name = "uuid")
+  @GeneratedValue
+  private UUID uuid;
 
-    @OneToMany(mappedBy = "employee", orphanRemoval = true)
-    private List<RoleInCompany> roles;
+  @OneToMany(mappedBy = "employee", orphanRemoval = true)
+  private List<RoleInCompany> roles;
 
-    public Employee() {
-        this.roles = new ArrayList<>();
-    }
+  public Employee() {
+    this.roles = new ArrayList<>();
+  }
 
-    public UUID getUuid() {
-        return uuid;
-    }
+  public UUID getUuid() {
+    return uuid;
+  }
 
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
+  public void setUuid(UUID uuid) {
+    this.uuid = uuid;
+  }
 
-    public List<RoleInCompany> getRoles() {
-        return roles;
-    }
+  public List<RoleInCompany> getRoles() {
+    return roles;
+  }
 
-    public void setRoles(List<RoleInCompany> roles) {
-        this.roles = roles;
-    }
+  public void setRoles(List<RoleInCompany> roles) {
+    this.roles = roles;
+  }
 
-    @Override
-    public String toString() {
-        return "Employee{" +
-            "uuid=" + uuid +
-            ", roles=" + roles +
-            '}';
-    }
+  @Override
+  public String toString() {
+    return "Employee{" +
+        "uuid=" + uuid +
+        ", roles=" + roles +
+        '}';
+  }
 }

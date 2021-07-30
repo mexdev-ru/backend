@@ -15,45 +15,45 @@ import java.util.UUID;
 @RequestMapping("company")
 public class CompanyController {
 
-    @Autowired
-    private CompanyService companyService;
+  @Autowired
+  private CompanyService companyService;
 
-    @RequestMapping(method = RequestMethod.GET, path = "/{id}")
-    public ResponseEntity<Company> read(@PathVariable(name = "id") UUID id) {
-        final Company company = companyService.read(id);
+  @RequestMapping(method = RequestMethod.GET, path = "/{id}")
+  public ResponseEntity<Company> read(@PathVariable(name = "id") UUID id) {
+    final Company company = companyService.read(id);
 
-        return company != null
-                ? new ResponseEntity<>(company, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
+    return company != null
+        ? new ResponseEntity<>(company, HttpStatus.OK)
+        : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+  }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/all")
-    public ResponseEntity<List<Company>> read() {
-        final List<Company> users = companyService.readAll();
+  @RequestMapping(method = RequestMethod.GET, path = "/all")
+  public ResponseEntity<List<Company>> read() {
+    final List<Company> users = companyService.readAll();
 
-        return users != null
-                ? new ResponseEntity<>(users, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
+    return users != null
+        ? new ResponseEntity<>(users, HttpStatus.OK)
+        : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+  }
 
-    @RequestMapping(method = RequestMethod.PUT, path = "/{id}")
-    public ResponseEntity<?> update(@PathVariable(name = "id") UUID id, @RequestBody Company company) {
-        return companyService.update(company, id)
-                ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
-    }
+  @RequestMapping(method = RequestMethod.PUT, path = "/{id}")
+  public ResponseEntity<?> update(@PathVariable(name = "id") UUID id, @RequestBody Company company) {
+    return companyService.update(company, id)
+        ? new ResponseEntity<>(HttpStatus.OK)
+        : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+  }
 
-    @RequestMapping(method = RequestMethod.POST, path = "")
-    public ResponseEntity<?> create(@RequestBody Company company) {
-        return companyService.create(company)
-                ? new ResponseEntity<>(HttpStatus.CREATED)
-                : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
+  @RequestMapping(method = RequestMethod.POST, path = "")
+  public ResponseEntity<?> create(@RequestBody Company company) {
+    return companyService.create(company)
+        ? new ResponseEntity<>(HttpStatus.CREATED)
+        : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+  }
 
-    @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
-    public ResponseEntity<?> delete(@PathVariable(name = "id") UUID id) {
-        return companyService.delete(id)
-                ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
-    }
+  @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
+  public ResponseEntity<?> delete(@PathVariable(name = "id") UUID id) {
+    return companyService.delete(id)
+        ? new ResponseEntity<>(HttpStatus.OK)
+        : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+  }
 }

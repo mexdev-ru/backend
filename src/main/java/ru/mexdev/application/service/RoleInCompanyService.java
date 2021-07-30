@@ -24,9 +24,10 @@ public class RoleInCompanyService {
   public boolean create(RoleInCompany element) {
     Employee employeeIssuer = employeeRepository.findById(element.getRoleIssuer().getUuid()).orElse(null);
     if (employeeIssuer != null
+        && roleRepository.existsById(element.getRole().getId())
         && employeeIssuer.getRoles().stream()
-        .anyMatch(role -> role.getCompany().getName().equals(element.getCompany().getName()))) {
-      roleRepository.save(element.getRole());
+        .anyMatch(role -> role.getCompany().getUuid().equals(element.getCompany().getUuid()))) {
+
       roleInCompanyRepository.save(element);
       return true;
     }

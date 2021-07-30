@@ -14,7 +14,7 @@ public class RoleService {
   private RoleRepository repository;
 
   public boolean create(Role element) {
-    if (repository.findByName(element.getName()).orElse(null) == null) {
+    if (!repository.existsByName(element.getName())) {
       repository.save(element);
       return true;
     }

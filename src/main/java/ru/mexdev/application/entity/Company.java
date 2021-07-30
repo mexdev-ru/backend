@@ -9,35 +9,35 @@ import java.util.UUID;
 @Table(name = "companies")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Company {
-    @Id
-    @Column(name = "uuid")
-    @GeneratedValue
-    private UUID uuid;
+  @Id
+  @Column(name = "uuid")
+  @GeneratedValue
+  private UUID uuid;
 
-    @Column(name = "name")
-    private String name;
+  @Column(name = "name")
+  private String name;
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public UUID getUuid() {
-        return uuid;
-    }
+  public UUID getUuid() {
+    return uuid;
+  }
 
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
+  public void setUuid(UUID uuid) {
+    this.uuid = uuid;
+  }
 
-    @Override
-    public String toString() {
-        return "Company{" +
-                "uuid=" + uuid +
-                ", name='" + name + '\'' +
-                '}';
-    }
+  @Override
+  public String toString() {
+    return "Company{" +
+        "uuid=" + uuid +
+        ", name='" + name + '\'' +
+        '}';
+  }
 }
