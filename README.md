@@ -116,4 +116,10 @@ ____
 - mvn clean install -DskipTests=true (mvnw for Win)
 - docker-compose up -d 
 - __docker-compose down__ any time you want to turn off Docker(before change docker-compose.yml)   
+
+---
+# Keycloak
+Гайд, по которому создавать ream и пользователей (my_realm, my_client, Роли: ADMIN, USER)
+_https://habr.com/ru/company/reksoft/blog/552346/_
+
 	

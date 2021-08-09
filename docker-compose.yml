@@ -1,12 +1,12 @@
 version: "3.9"
 
 services:
-  user:
-    container_name: user_service
-    image: user_service
-    build: .
+  backend:
+    container_name: backend
+    image: backend
     ports:
-      - 8080:8080
+      - 8082:8082
+    build: .
     working_dir: /app
     volumes:
       - ./:/app
@@ -14,18 +14,48 @@ services:
       "spring.datasource.url": 'jdbc:postgresql://data_base:5432/customers?User=root&password=admin'
     depends_on:
       - data_base
+      - keycloak
 
+  keycloak:
+    image: jboss/keycloak
+    container_name: keycloak
+    ports:
+      - "8080:8080"
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: keycloak_db
+      DB_DATABASE: keycloak_db
+      DB_USER: root
+      DB_PASSWORD: admin
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin_password
+    depends_on:
+      - keycloak_db
 
   data_base:
     container_name: data_base
     image: postgres:13.1-alpine
     ports:
-    - 5432:5432
+      - 5432:5432
     volumes:
-      - my_db_postgresql:/var/lib/postgresql/data
+      - service_db:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: customers
       POSTGRES_USER: root
       POSTGRES_PASSWORD: admin
+
+  keycloak_db:
+    container_name: keycloak_db
+    image: postgres:13.1-alpine
+    ports:
+      - "5431:5431"
+    volumes:
+      - keycloak_db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: keycloak_db
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: admin
+
 volumes:
-  my_db_postgresql:
+  service_db:
+  keycloak_db:
