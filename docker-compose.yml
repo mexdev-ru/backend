@@ -15,6 +15,8 @@ services:
     depends_on:
       - data_base
       - keycloak
+    networks:
+      - example
 
   keycloak:
     image: jboss/keycloak
@@ -31,12 +33,20 @@ services:
       KEYCLOAK_PASSWORD: admin_password
     depends_on:
       - keycloak_db
-
+    links:
+      - "keycloak_db:keycloak_db"
+    networks:
+      example:
+        aliases:
+          - keylocal.vetermanve.com
   data_base:
     container_name: data_base
     image: postgres:13.1-alpine
     ports:
       - 5432:5432
+    restart: unless-stopped
+    networks:
+      - example
     volumes:
       - service_db:/var/lib/postgresql/data
     environment:
@@ -49,6 +59,9 @@ services:
     image: postgres:13.1-alpine
     ports:
       - "5431:5431"
+    restart: unless-stopped
+    networks:
+      - example
     volumes:
       - keycloak_db:/var/lib/postgresql/data
     environment:
@@ -59,3 +72,5 @@ services:
 volumes:
   service_db:
   keycloak_db:
+networks:
+  example:
