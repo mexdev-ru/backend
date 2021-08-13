@@ -49,6 +49,7 @@ services:
     networks:
       - example
     volumes:
+      - .docker/initDB.sql:/docker-entrypoint-initdb.d/initDB.sql
       - service_db:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: customers
