@@ -39,6 +39,7 @@ services:
       example:
         aliases:
           - keylocal.vetermanve.com
+
   data_base:
     container_name: data_base
     image: postgres:13.1-alpine
