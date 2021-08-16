@@ -1,3 +1,12 @@
+CREATE TABLE codes
+(
+    uuid                 UUID        NOT NULL,
+    code                 VARCHAR(20) NOT NULL,
+    type_of_vocabulary   VARCHAR(10) NOT NULL,
+    coder_organization   VARCHAR(3)  NOT NULL,
+    version              VARCHAR(35) NOT NULL
+);
+
 CREATE TABLE companies
 (
     uuid UUID NOT NULL,
