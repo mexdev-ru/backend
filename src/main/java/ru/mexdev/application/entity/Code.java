@@ -3,6 +3,8 @@ package ru.mexdev.application.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.UUID;
 
 @Entity
@@ -23,6 +25,8 @@ public class Code {
     private String typeOfVocabulary;
 
     @Column(name = "coderOrganization")
+    @Size(min = 3, max = 3, message = "Size must be 3")
+    @NotBlank(message = "It must not be null and must contain at least one non-whitespace character")
     private String coderOrganization;
 
     @Column(name = "version")

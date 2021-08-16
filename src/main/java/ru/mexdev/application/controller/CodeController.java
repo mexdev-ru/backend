@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mexdev.application.entity.Code;
-import ru.mexdev.application.entity.User;
 import ru.mexdev.application.service.CodeService;
 
 import java.util.List;

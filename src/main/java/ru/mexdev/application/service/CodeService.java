@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.mexdev.application.entity.Code;
 import ru.mexdev.application.repository.CodeRepository;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,10 +13,9 @@ import java.util.UUID;
 public class CodeService {
 
   @Autowired
-
   private CodeRepository repository;
 
-  public void create(Code element) {
+  public void create(@Valid Code element) {
     repository.save(element);
   }
 
@@ -27,7 +27,7 @@ public class CodeService {
     return repository.findById(id).orElse(null);
   }
 
-  public boolean update(Code element, UUID id) {
+  public boolean update(@Valid Code element, UUID id) {
     if (repository.existsById(id)) {
       element.setUuid(id);
       repository.save(element);
