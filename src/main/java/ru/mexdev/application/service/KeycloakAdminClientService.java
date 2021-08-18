@@ -7,15 +7,19 @@ import org.springframework.stereotype.Service;
 import ru.mexdev.application.config.KeycloakConfig;
 import ru.mexdev.application.entity.User;
 
+import javax.ws.rs.core.Response;
 import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class KeycloakAdminClientService {
-  public UserRepresentation addUser(User user) {
+  public Response.StatusType addUser(User user) {
     UsersResource usersResource = KeycloakConfig.getInstance().realm(KeycloakConfig.realm).users();
     CredentialRepresentation credentialRepresentation = createPasswordCredentials(user.getPassword());
 
     UserRepresentation kcUser = new UserRepresentation();
+    kcUser.setId(String.valueOf(UUID.randomUUID()));
     kcUser.setUsername(user.getEmail());
     kcUser.setCredentials(Collections.singletonList(credentialRepresentation));
     kcUser.setFirstName(user.getFirstName());
@@ -23,11 +27,14 @@ public class KeycloakAdminClientService {
     kcUser.setEmail(user.getEmail());
     kcUser.setEnabled(true);
     kcUser.setEmailVerified(false);
-    usersResource.create(kcUser);
-    return kcUser;
+    return usersResource.create(kcUser).getStatusInfo();
   }
 
-  private static CredentialRepresentation  createPasswordCredentials(String password) {
+  public List<UserRepresentation> readAll() {
+    return KeycloakConfig.getInstance().realm(KeycloakConfig.realm).users().list();
+  }
+
+  private static CredentialRepresentation createPasswordCredentials(String password) {
     CredentialRepresentation passwordCredentials = new CredentialRepresentation();
     passwordCredentials.setTemporary(false);
     passwordCredentials.setType(CredentialRepresentation.PASSWORD);
