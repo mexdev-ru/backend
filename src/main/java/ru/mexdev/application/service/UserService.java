@@ -2,43 +2,40 @@ package ru.mexdev.application.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mexdev.application.entity.Role;
-import ru.mexdev.application.repository.RoleRepository;
+import ru.mexdev.application.entity.User;
+import ru.mexdev.application.repository.UserRepository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
-public class RoleService {
+public class UserService {
 
   @Autowired
-  private RoleRepository repository;
+  private UserRepository repository;
 
-  public boolean create(Role element) {
-    if (!repository.existsByName(element.getName())) {
-      repository.save(element);
-      return true;
-    }
-    return false;
+  public void create(User element) {
+    repository.save(element);
   }
 
-  public List<Role> readAll() {
+  public List<User> readAll() {
     return repository.findAll();
   }
 
-  public Role read(Long id) {
+  public User read(UUID id) {
     return repository.findById(id).orElse(null);
   }
 
-  public boolean update(Role element, Long id) {
+  public boolean update(User element, UUID id) {
     if (repository.existsById(id)) {
-      element.setId(id);
+      element.setUuid(id);
       repository.save(element);
       return true;
     }
     return false;
   }
-  
-  public boolean delete(Long id) {
+
+  public boolean delete(UUID id) {
     if (repository.existsById(id)) {
       repository.deleteById(id);
       return true;

@@ -45,6 +45,7 @@ CREATE TABLE users
     patronymic VARCHAR(255),
     email      VARCHAR(255),
     phone      VARCHAR(255),
+    password   VARCHAR(255),
     CONSTRAINT pk_users PRIMARY KEY (uuid)
 );
 
