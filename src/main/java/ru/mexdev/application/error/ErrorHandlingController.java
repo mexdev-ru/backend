@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 
 import javax.validation.ConstraintViolationException;
+import javax.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,9 +25,9 @@ public class ErrorHandlingController {
         .collect(Collectors.toList());
   }
 
+  @ResponseBody
   @ExceptionHandler(MethodArgumentNotValidException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  @ResponseBody
   public List<Violation> onMethodArgumentNotValidException(MethodArgumentNotValidException e) {
     return e.getBindingResult().getFieldErrors().stream()
         .map(error -> new Violation(error.getField(), error.getDefaultMessage()))
