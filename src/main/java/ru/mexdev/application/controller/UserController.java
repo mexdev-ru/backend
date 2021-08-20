@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.mexdev.application.config.KeycloakConfig;
 import ru.mexdev.application.entity.User;
 import ru.mexdev.application.service.KeycloakAdminClientService;
 import ru.mexdev.application.service.UserService;
@@ -25,7 +26,7 @@ public class UserController {
   private UserService userService;
 
   @RequestMapping(method = RequestMethod.GET, path = "/keycloak/{id}")
-  public ResponseEntity<UserRepresentation> readkeycloak(@PathVariable(name = "id") UUID id) {
+  public ResponseEntity<UserRepresentation> readKeycloak(@PathVariable(name = "id") UUID id) {
     try {
       return new ResponseEntity<>(kcAdminClient.read(id), HttpStatus.OK);
     }
@@ -39,8 +40,8 @@ public class UserController {
     final User user = userService.read(id);
 
     return user != null
-            ? new ResponseEntity<>(user, HttpStatus.OK)
-            : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        ? new ResponseEntity<>(user, HttpStatus.OK)
+        : new ResponseEntity<>(HttpStatus.NOT_FOUND);
   }
 
   @RequestMapping(method = RequestMethod.GET, path = "/keycloak/all")
@@ -57,8 +58,8 @@ public class UserController {
     final List<User> users = userService.readAll();
 
     return users != null
-            ? new ResponseEntity<>(users, HttpStatus.OK)
-            : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        ? new ResponseEntity<>(users, HttpStatus.OK)
+        : new ResponseEntity<>(HttpStatus.NOT_FOUND);
   }
 
   @RequestMapping(method = RequestMethod.PUT, path = "/{id}")
@@ -71,25 +72,30 @@ public class UserController {
       catch (ClientErrorException e) {
         return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
       }
-    } else {
+    }
+    else {
       return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
   }
 
- //////////TO DO//////////////different uuid (keycloak!=userService)
   @RequestMapping(method = RequestMethod.POST, path = "")
   public ResponseEntity<?> create(@RequestBody User user) {
-    userService.create(user);
-    if((HttpStatus.valueOf(kcAdminClient.create(user))).equals(HttpStatus.CREATED)) {
-      return new ResponseEntity<>(HttpStatus.CREATED);
+    HttpStatus kcUserHttpStatus = HttpStatus.valueOf(kcAdminClient.create(user));
+    if (kcUserHttpStatus.equals(HttpStatus.CREATED)) {
+
+      user.setUuid(UUID.fromString(
+          KeycloakConfig.getInstance().realm(KeycloakConfig.realm).users()
+              .search(user.getEmail(), user.getFirstName(), user.getLastName(), user.getEmail(), 0, 1).get(0).getId()));
+
+      userService.create(user);
     }
-    else return new ResponseEntity<>(HttpStatus.valueOf(kcAdminClient.create(user)));
+    return new ResponseEntity<>(kcUserHttpStatus);
   }
 
   @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
   public ResponseEntity<?> delete(@PathVariable(name = "id") UUID id) {
     return userService.delete(id)
-            ? new ResponseEntity<>(HttpStatus.valueOf(kcAdminClient.delete(id)))
-            : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        ? new ResponseEntity<>(HttpStatus.valueOf(kcAdminClient.delete(id)))
+        : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
   }
 }

@@ -38,8 +38,6 @@ public class KeycloakAdminClientService {
     UsersResource usersResource = KeycloakConfig.getInstance().realm(KeycloakConfig.realm).users();
     UserRepresentation kcUser = new UserRepresentation();
     updateKcUser(user, kcUser);
-    //kcUser.setId(String.valueOf(UUID.randomUUID()));
-    kcUser.setId(String.valueOf(user.getUuid()));
     kcUser.setEnabled(true);
     kcUser.setEmailVerified(false);
     return usersResource.create(kcUser).getStatus();

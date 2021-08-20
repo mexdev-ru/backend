@@ -1,7 +1,6 @@
 package ru.mexdev.application.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import ru.mexdev.application.entity.Code;
 import ru.mexdev.application.repository.CodeRepository;
@@ -16,7 +15,6 @@ public class CodeService {
   @Autowired
   private CodeRepository repository;
 
-  @KafkaListener(topics = "post_code", groupId = "code_service")
   public void create(@Valid Code element) {
     repository.save(element);
   }
@@ -38,7 +36,6 @@ public class CodeService {
     return false;
   }
 
-  @KafkaListener(topics = "delete_code", groupId = "code_service")
   public boolean delete(UUID id) {
     if (repository.existsById(id)) {
       repository.deleteById(id);
