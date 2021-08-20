@@ -3,6 +3,7 @@ package ru.mexdev.application.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 import ru.mexdev.application.entity.Code;
 import ru.mexdev.application.service.CodeService;
@@ -17,6 +18,11 @@ public class CodeController {
 
   @Autowired
   private CodeService codeService;
+
+  @Autowired
+  private KafkaTemplate<String, Code> codeKafkaTemplate;
+  @Autowired
+  private KafkaTemplate<String, UUID> UUIDKafkaTemplate;
 
   @RequestMapping(method = RequestMethod.GET, path = "/{id}")
   public ResponseEntity<Code> read(@PathVariable(name = "id") UUID id) {
@@ -45,14 +51,13 @@ public class CodeController {
 
   @RequestMapping(method = RequestMethod.POST, path = "")
   public ResponseEntity<?> create(@RequestBody Code code) {
-    codeService.create(code);
+    codeKafkaTemplate.send("post_code", code);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
   @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
   public ResponseEntity<?> delete(@PathVariable(name = "id") UUID id) {
-    return codeService.delete(id)
-        ? new ResponseEntity<>(HttpStatus.OK)
-        : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+    UUIDKafkaTemplate.send("delete_code", id);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 }
