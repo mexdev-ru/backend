@@ -19,6 +19,17 @@ public class Employee {
   @OneToMany(mappedBy = "employee", orphanRemoval = true)
   private List<RoleInCompany> roles;
 
+  @Column(name = "userId")
+  private String userId;
+
+  public void setUserId(String userId) {
+    this.userId = userId;
+  }
+
+  public String getUserId() {
+    return userId;
+  }
+
   public Employee() {
     this.roles = new ArrayList<>();
   }

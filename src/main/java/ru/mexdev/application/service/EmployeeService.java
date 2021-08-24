@@ -3,6 +3,7 @@ package ru.mexdev.application.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mexdev.application.entity.Employee;
+import ru.mexdev.application.entity.Role;
 import ru.mexdev.application.entity.RoleInCompany;
 import ru.mexdev.application.repository.EmployeeRepository;
 
@@ -56,4 +57,16 @@ public class EmployeeService {
     }
     return false;
   }
+
+  public boolean checkAccess(UUID employeUuid, String requiredRole) {
+    Employee employee = employeeRepository.getById(employeUuid);
+    List<RoleInCompany> listRolesInCompany = employee.getRoles();
+    List<Role> listRoles = null;
+    listRolesInCompany.forEach(roleInCompany -> listRoles.add(roleInCompany.getRole()));
+    List<String> listRoleName = null;
+    listRoles.forEach(role -> listRoleName.add(role.getName()));
+    if(listRoleName.contains(requiredRole)){ return true;}
+    else {return false;}
+  }
+
 }
