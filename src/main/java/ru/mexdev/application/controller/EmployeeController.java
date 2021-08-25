@@ -1,5 +1,6 @@
 package ru.mexdev.application.controller;
 
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import ru.mexdev.application.service.EmployeeService;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:8081")
@@ -52,10 +54,17 @@ public class EmployeeController {
   }
 
   @RequestMapping(method = RequestMethod.POST, path = "")
-  public ResponseEntity<?> create(@RequestBody Employee employee) {
-    //Logger.getAnonymousLogger().info(authentication.getPrincipal().toString());
-    employeeService.create(employee);
-    return new ResponseEntity<>(HttpStatus.CREATED);
+  public ResponseEntity<?> create(@RequestBody Employee employee, KeycloakAuthenticationToken authentication) {
+    Logger.getAnonymousLogger().info(authentication.getPrincipal().toString());
+    Logger.getAnonymousLogger().info(String.valueOf(UUID.fromString(authentication.getPrincipal().toString())));
+    Employee authEmployee = employeeService.searchByUserId(UUID.fromString(authentication.getPrincipal().toString()));
+    if (authEmployee != null && employeeService.checkAccess(authEmployee, "ADMIN")) {
+      employeeService.create(employee);
+      return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+    else {
+      return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+    }
   }
 
   @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")

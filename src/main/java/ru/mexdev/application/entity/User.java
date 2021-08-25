@@ -1,11 +1,13 @@
 package ru.mexdev.application.entity;
 
-import javax.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.UUID;
 
 @Entity
@@ -15,6 +17,7 @@ public class User {
   @Id
   @Column(name = "uuid")
   @JsonSetter(nulls = Nulls.SKIP)
+  @org.hibernate.annotations.Type(type="org.hibernate.type.UUIDBinaryType")
   private UUID uuid;
 
   @Column(name = "first_name")
