@@ -53,9 +53,7 @@ public class EmployeeController {
 
   @RequestMapping(method = RequestMethod.POST, path = "")
   public ResponseEntity<?> create(@RequestBody Employee employee) {
-    //TODO
-    //надо взять каким-то образом список employee uuid текущего пользователя и загнать в foreach checkAsses(uuid, String "General KENOBI")
-    // if(employeeService.checkAccess())
+    //Logger.getAnonymousLogger().info(authentication.getPrincipal().toString());
     employeeService.create(employee);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
