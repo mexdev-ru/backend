@@ -4,7 +4,8 @@ CREATE TABLE codes
     code                 VARCHAR(20) NOT NULL,
     type_of_vocabulary   VARCHAR(10) NOT NULL,
     coder_organization   VARCHAR(3)  NOT NULL,
-    version              VARCHAR(35) NOT NULL
+    version              VARCHAR(35) NOT NULL,
+    CONSTRAINT pk_codes PRIMARY KEY (uuid)
 );
 
 CREATE TABLE companies
@@ -16,7 +17,8 @@ CREATE TABLE companies
 
 CREATE TABLE employees
 (
-    uuid UUID NOT NULL,
+    uuid    UUID NOT NULL,
+    user_id UUID,
     CONSTRAINT pk_employees PRIMARY KEY (uuid)
 );
 
@@ -48,6 +50,9 @@ CREATE TABLE users
     password   VARCHAR(255),
     CONSTRAINT pk_users PRIMARY KEY (uuid)
 );
+
+ALTER TABLE employees
+    ADD CONSTRAINT FK_EMPLOYEES_ON_USERID_UUID FOREIGN KEY (user_id_uuid) REFERENCES users (uuid);
 
 ALTER TABLE roles_in_companies
     ADD CONSTRAINT FK_ROLES_IN_COMPANIES_ON_COMPANY_UUID FOREIGN KEY (company_uuid) REFERENCES companies (uuid);

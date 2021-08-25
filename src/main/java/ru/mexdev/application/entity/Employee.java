@@ -19,14 +19,15 @@ public class Employee {
   @OneToMany(mappedBy = "employee", orphanRemoval = true)
   private List<RoleInCompany> roles;
 
-  @Column(name = "userId")
-  private String userId;
+  @OneToOne
+  @JoinColumn
+  private User userId;
 
-  public void setUserId(String userId) {
+  public void setUserId(User userId) {
     this.userId = userId;
   }
 
-  public String getUserId() {
+  public User getUserId() {
     return userId;
   }
 

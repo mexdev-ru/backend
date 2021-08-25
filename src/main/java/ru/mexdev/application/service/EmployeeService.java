@@ -58,15 +58,11 @@ public class EmployeeService {
     return false;
   }
 
-  public boolean checkAccess(UUID employeUuid, String requiredRole) {
-    Employee employee = employeeRepository.getById(employeUuid);
+  public boolean checkAccess(UUID employeeUuid, String requiredRole) {
+    Employee employee = employeeRepository.getById(employeeUuid);
     List<RoleInCompany> listRolesInCompany = employee.getRoles();
-    List<Role> listRoles = null;
-    listRolesInCompany.forEach(roleInCompany -> listRoles.add(roleInCompany.getRole()));
     List<String> listRoleName = null;
-    listRoles.forEach(role -> listRoleName.add(role.getName()));
-    if(listRoleName.contains(requiredRole)){ return true;}
-    else {return false;}
+    listRolesInCompany.forEach(roleInCompany -> listRoleName.add(roleInCompany.getRole().getName()));
+    return listRoleName.contains(requiredRole);
   }
-
 }
