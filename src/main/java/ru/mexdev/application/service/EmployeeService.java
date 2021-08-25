@@ -58,6 +58,10 @@ public class EmployeeService {
     return false;
   }
 
+  public UUID searchByUserId(UUID userUuid) {
+    return employeeRepository.findByUserId(userUuid);
+  }
+
   public boolean checkAccess(UUID employeUuid, String requiredRole) {
     Employee employee = employeeRepository.getById(employeUuid);
     List<RoleInCompany> listRolesInCompany = employee.getRoles();

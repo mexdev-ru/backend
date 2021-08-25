@@ -1,5 +1,8 @@
 package ru.mexdev.application.controller;
 
+import org.keycloak.adapters.springsecurity.account.SimpleKeycloakAccount;
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
+import org.keycloak.representations.AccessToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,12 +55,17 @@ public class EmployeeController {
   }
 
   @RequestMapping(method = RequestMethod.POST, path = "")
-  public ResponseEntity<?> create(@RequestBody Employee employee) {
-    //TODO
-    //надо взять каким-то образом список employee uuid текущего пользователя и загнать в foreach checkAsses(uuid, String "General KENOBI")
-    // if(employeeService.checkAccess())
+  public ResponseEntity<?> create(@RequestBody Employee employee, KeycloakAuthenticationToken authentication) {
+
+    SimpleKeycloakAccount account = (SimpleKeycloakAccount) authentication.getDetails();
+    AccessToken token = account.getKeycloakSecurityContext().getToken();
+    Boolean checker = employeeService.checkAccess(employeeService.searchByUserId(UUID.fromString(token.getId())), "General");
+    if(checker) {
     employeeService.create(employee);
-    return new ResponseEntity<>(HttpStatus.CREATED);
+    return new ResponseEntity<>(HttpStatus.CREATED);}
+    else {
+      return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+    }
   }
 
   @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
