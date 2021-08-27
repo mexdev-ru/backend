@@ -6,6 +6,7 @@ import ru.mexdev.application.entity.Employee;
 import ru.mexdev.application.entity.RoleInCompany;
 import ru.mexdev.application.repository.EmployeeRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,7 +64,7 @@ public class EmployeeService {
 
   public boolean checkAccess(Employee employee, String requiredRole) {
     List<RoleInCompany> listRolesInCompany = employee.getRoles();
-    List<String> listRoleName = null;
+    List<String> listRoleName = new ArrayList<>();
     listRolesInCompany.forEach(roleInCompany -> listRoleName.add(roleInCompany.getRole().getName()));
     return listRoleName.contains(requiredRole);
   }

@@ -6,9 +6,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mexdev.application.entity.Employee;
+import ru.mexdev.application.entity.Role;
 import ru.mexdev.application.entity.RoleInCompany;
+import ru.mexdev.application.repository.UserRepository;
 import ru.mexdev.application.service.EmployeeService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -20,6 +23,9 @@ public class EmployeeController {
 
   @Autowired
   private EmployeeService employeeService;
+
+  @Autowired
+  private UserRepository userRepository;
 
   @RequestMapping(method = RequestMethod.GET, path = "/{id}")
   public ResponseEntity<Employee> read(@PathVariable(name = "id") UUID id) {
@@ -54,12 +60,25 @@ public class EmployeeController {
   }
 
   @RequestMapping(method = RequestMethod.POST, path = "")
-  public ResponseEntity<?> create(@RequestBody Employee employee, KeycloakAuthenticationToken authentication) {
+  public ResponseEntity<?> create( @RequestBody Employee employee, KeycloakAuthenticationToken authentication) {
     Logger.getAnonymousLogger().info(authentication.getPrincipal().toString());
+
     Logger.getAnonymousLogger().info(String.valueOf(UUID.fromString(authentication.getPrincipal().toString())));
     Employee authEmployee = employeeService.searchByUserId(UUID.fromString(authentication.getPrincipal().toString()));
+    //Employee employee = new Employee();
+    //employeee.setRoles();
+    /*Role role = new Role();
+    role.setName("ADMIN");
+    role.setId((long) 1);
+    RoleInCompany roleInCompany = new RoleInCompany();
+    roleInCompany.setRole(role);
+    List<RoleInCompany>listRoleInCompany = new ArrayList<>();
+    listRoleInCompany.add(roleInCompany);
+    authEmployee.setRoles(listRoleInCompany);
+    employee.setUserId(userRepository.findById(UUID.fromString(authentication.getPrincipal().toString())).orElse(null));*/
     if (authEmployee != null && employeeService.checkAccess(authEmployee, "ADMIN")) {
       employeeService.create(employee);
+      //Logger.getAnonymousLogger().info(employee.getRoles().toString());
       return new ResponseEntity<>(HttpStatus.CREATED);
     }
     else {

@@ -1,15 +1,13 @@
 package ru.mexdev.application.service;
 
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mexdev.application.entity.Company;
 import ru.mexdev.application.entity.Employee;
 import ru.mexdev.application.entity.Role;
 import ru.mexdev.application.entity.RoleInCompany;
-import ru.mexdev.application.repository.CompanyRepository;
-import ru.mexdev.application.repository.EmployeeRepository;
-import ru.mexdev.application.repository.RoleInCompanyRepository;
-import ru.mexdev.application.repository.RoleRepository;
+import ru.mexdev.application.repository.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,8 +25,10 @@ public class CompanyService {
   private RoleInCompanyRepository roleInCompanyRepository;
   @Autowired
   private RoleRepository roleRepository;
+  @Autowired
+  private UserRepository userRepository;
 
-  public boolean create(Company element) {
+  public boolean create(Company element, KeycloakAuthenticationToken authentication) {
     if (!companyRepository.existsByName(element.getName())) {
       companyRepository.save(element);
 
@@ -42,6 +42,7 @@ public class CompanyService {
       RoleInCompany roleInCompany = new RoleInCompany(element, role, null, employee);
       roleInCompanyRepository.save(roleInCompany);
       employee.getRoles().add(roleInCompany);
+      employee.setUserId(userRepository.findById(UUID.fromString(authentication.getPrincipal().toString())).orElse(null));
       employeeRepository.save(employee);
       return true;
     }
