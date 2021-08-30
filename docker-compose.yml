@@ -76,3 +76,4 @@ volumes:
   keycloak_db:
 networks:
   example:
+    name: keycloak_network
