@@ -1,5 +1,6 @@
 package ru.mexdev.application.controller;
 
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,8 +46,8 @@ public class CompanyController {
   }
 
   @RequestMapping(method = RequestMethod.POST, path = "")
-  public ResponseEntity<?> create(@RequestBody Company company) {
-    return companyService.create(company)
+  public ResponseEntity<?> create(@RequestBody Company company, KeycloakAuthenticationToken authentication) {
+    return companyService.create(company, authentication)
         ? new ResponseEntity<>(HttpStatus.CREATED)
         : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
   }

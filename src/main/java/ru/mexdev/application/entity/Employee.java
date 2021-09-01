@@ -14,7 +14,6 @@ public class Employee {
   @Id
   @Column(name = "uuid")
   @GeneratedValue
-  @org.hibernate.annotations.Type(type="org.hibernate.type.UUIDBinaryType")
   private UUID uuid;
 
   @OneToMany(mappedBy = "employee", orphanRemoval = true)

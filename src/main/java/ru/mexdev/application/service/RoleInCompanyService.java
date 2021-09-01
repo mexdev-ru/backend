@@ -43,19 +43,19 @@ public class RoleInCompanyService {
   }
 
   public boolean update(RoleInCompany element, UUID id) {
-    if (roleInCompanyRepository.existsById(id)) {
-      element.setUuid(id);
-      roleInCompanyRepository.save(element);
-      return true;
+    if (!roleInCompanyRepository.existsById(id)) {
+      return false;
     }
-    return false;
+    element.setUuid(id);
+    roleInCompanyRepository.save(element);
+    return true;
   }
 
   public boolean delete(UUID id) {
-    if (roleInCompanyRepository.existsById(id)) {
-      roleInCompanyRepository.deleteById(id);
-      return true;
+    if (!roleInCompanyRepository.existsById(id)) {
+      return false;
     }
-    return false;
+    roleInCompanyRepository.deleteById(id);
+    return true;
   }
 }

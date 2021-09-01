@@ -17,7 +17,6 @@ public class User {
   @Id
   @Column(name = "uuid")
   @JsonSetter(nulls = Nulls.SKIP)
-  @org.hibernate.annotations.Type(type="org.hibernate.type.UUIDBinaryType")
   private UUID uuid;
 
   @Column(name = "first_name")

@@ -12,7 +12,6 @@ import ru.mexdev.application.service.EmployeeService;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -48,24 +47,18 @@ public class EmployeeController {
   }
 
   @RequestMapping(method = RequestMethod.PUT, path = "/add_role/{id}")
-  public ResponseEntity<?> addRole(@PathVariable(name = "id") UUID id, @RequestBody RoleInCompany role) {
-    return employeeService.addRole(role, id)
+  public ResponseEntity<?> addRole(@PathVariable(name = "id") UUID id, @RequestBody RoleInCompany role,
+                                   KeycloakAuthenticationToken authentication) {
+    return employeeService.addRole(role, id, authentication)
         ? new ResponseEntity<>(HttpStatus.OK)
         : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
   }
 
   @RequestMapping(method = RequestMethod.POST, path = "")
-  public ResponseEntity<?> create(@RequestBody Employee employee, KeycloakAuthenticationToken authentication) {
-    Logger.getAnonymousLogger().info(authentication.getPrincipal().toString());
-    Logger.getAnonymousLogger().info(String.valueOf(UUID.fromString(authentication.getPrincipal().toString())));
-    Employee authEmployee = employeeService.searchByUserId(UUID.fromString(authentication.getPrincipal().toString()));
-    if (authEmployee != null && employeeService.checkAccess(authEmployee, "ADMIN")) {
-      employeeService.create(employee);
-      return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-    else {
-      return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
-    }
+  public ResponseEntity<?> create(@RequestBody Employee employee) {
+    return employeeService.create(employee)
+        ? new ResponseEntity<>(HttpStatus.CREATED)
+        : new ResponseEntity<>(HttpStatus.CONFLICT);
   }
 
   @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")

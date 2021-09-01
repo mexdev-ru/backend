@@ -40,12 +40,14 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
     super.configure(http);
     http.cors();
     http.csrf().disable();
+
+    String ADMIN_ROLE_NAME = "ADMIN";
     http
         .authorizeRequests()
-        .antMatchers("/company/*").hasRole("ADMIN")
-        .antMatchers("/role/*").hasRole("USER")
-        .antMatchers("/code/*").hasRole("USER")
-        .antMatchers("/user/*").hasRole("ADMIN")
-        .anyRequest().permitAll();
+        .antMatchers("/role/*").hasRole(ADMIN_ROLE_NAME)
+        .antMatchers("/code/*").hasRole(ADMIN_ROLE_NAME)
+        .antMatchers("/user/*").hasRole(ADMIN_ROLE_NAME)
+        .antMatchers("/employee/*").fullyAuthenticated()
+        .antMatchers("/company/*").fullyAuthenticated();
   }
 }

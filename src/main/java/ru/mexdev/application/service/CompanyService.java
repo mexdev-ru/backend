@@ -1,15 +1,13 @@
 package ru.mexdev.application.service;
 
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mexdev.application.entity.Company;
 import ru.mexdev.application.entity.Employee;
 import ru.mexdev.application.entity.Role;
 import ru.mexdev.application.entity.RoleInCompany;
-import ru.mexdev.application.repository.CompanyRepository;
-import ru.mexdev.application.repository.EmployeeRepository;
-import ru.mexdev.application.repository.RoleInCompanyRepository;
-import ru.mexdev.application.repository.RoleRepository;
+import ru.mexdev.application.repository.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,7 +15,7 @@ import java.util.UUID;
 @Service
 public class CompanyService {
 
-  private final static String ADMIN_ROLE_NAME = "ADMIN";
+  protected final static String COMPANY_GENERAL_ROLE_NAME = "ADMIN";
 
   @Autowired
   private CompanyRepository companyRepository;
@@ -27,21 +25,24 @@ public class CompanyService {
   private RoleInCompanyRepository roleInCompanyRepository;
   @Autowired
   private RoleRepository roleRepository;
+  @Autowired
+  private UserRepository userRepository;
 
-  public boolean create(Company element) {
+  public boolean create(Company element, KeycloakAuthenticationToken authentication) {
     if (!companyRepository.existsByName(element.getName())) {
       companyRepository.save(element);
 
       Employee employee = new Employee();
       employeeRepository.save(employee);
-      Role role = roleRepository.findByName(ADMIN_ROLE_NAME).orElse(null);
+      Role role = roleRepository.findByName(COMPANY_GENERAL_ROLE_NAME).orElse(null);
       if (role == null) {
-        role = new Role(ADMIN_ROLE_NAME);
+        role = new Role(COMPANY_GENERAL_ROLE_NAME);
         roleRepository.save(role);
       }
       RoleInCompany roleInCompany = new RoleInCompany(element, role, null, employee);
       roleInCompanyRepository.save(roleInCompany);
       employee.getRoles().add(roleInCompany);
+      employee.setUserId(userRepository.findById(UUID.fromString(authentication.getPrincipal().toString())).orElse(null));
       employeeRepository.save(employee);
       return true;
     }
