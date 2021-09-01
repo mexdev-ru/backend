@@ -17,8 +17,8 @@ CREATE TABLE companies
 
 CREATE TABLE employees
 (
-    uuid    UUID NOT NULL,
-    user_id UUID,
+    uuid         UUID NOT NULL,
+    user_id      UUID,
     CONSTRAINT pk_employees PRIMARY KEY (uuid)
 );
 
@@ -52,7 +52,7 @@ CREATE TABLE users
 );
 
 ALTER TABLE employees
-    ADD CONSTRAINT FK_EMPLOYEES_ON_USERID_UUID FOREIGN KEY (user_id_uuid) REFERENCES users (uuid);
+    ADD CONSTRAINT FK_EMPLOYEES_ON_USERID_UUID FOREIGN KEY (user_id) REFERENCES users (uuid);
 
 ALTER TABLE roles_in_companies
     ADD CONSTRAINT FK_ROLES_IN_COMPANIES_ON_COMPANY_UUID FOREIGN KEY (company_uuid) REFERENCES companies (uuid);

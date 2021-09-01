@@ -28,19 +28,19 @@ public class CodeService {
   }
 
   public boolean update(@Valid Code element, UUID id) {
-    if (repository.existsById(id)) {
-      element.setUuid(id);
-      repository.save(element);
-      return true;
+    if (!repository.existsById(id)) {
+      return false;
     }
-    return false;
+    element.setUuid(id);
+    repository.save(element);
+    return true;
   }
 
   public boolean delete(UUID id) {
-    if (repository.existsById(id)) {
-      repository.deleteById(id);
-      return true;
+    if (!repository.existsById(id)) {
+      return false;
     }
-    return false;
+    repository.deleteById(id);
+    return true;
   }
 }

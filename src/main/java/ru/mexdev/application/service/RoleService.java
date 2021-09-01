@@ -30,19 +30,19 @@ public class RoleService {
   }
 
   public boolean update(Role element, Long id) {
-    if (repository.existsById(id)) {
-      element.setId(id);
-      repository.save(element);
-      return true;
+    if (!repository.existsById(id)) {
+      return false;
     }
-    return false;
+    element.setId(id);
+    repository.save(element);
+    return true;
   }
-  
+
   public boolean delete(Long id) {
-    if (repository.existsById(id)) {
-      repository.deleteById(id);
-      return true;
+    if (!repository.existsById(id)) {
+      return false;
     }
-    return false;
+    repository.deleteById(id);
+    return true;
   }
 }

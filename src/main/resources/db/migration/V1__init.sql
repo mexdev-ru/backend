@@ -1,4 +1,4 @@
-/*CREATE TABLE codes
+CREATE TABLE codes
 (
     uuid                 UUID        NOT NULL,
     code                 VARCHAR(20) NOT NULL,
@@ -52,7 +52,7 @@ CREATE TABLE users
 );
 
 ALTER TABLE employees
-    ADD CONSTRAINT FK_EMPLOYEES_ON_USERID_UUID FOREIGN KEY (user_id_uuid) REFERENCES users (uuid);
+    ADD CONSTRAINT FK_EMPLOYEES_ON_USERID_UUID FOREIGN KEY (user_id) REFERENCES users (uuid);
 
 ALTER TABLE roles_in_companies
     ADD CONSTRAINT FK_ROLES_IN_COMPANIES_ON_COMPANY_UUID FOREIGN KEY (company_uuid) REFERENCES companies (uuid);
@@ -64,4 +64,4 @@ ALTER TABLE roles_in_companies
     ADD CONSTRAINT FK_ROLES_IN_COMPANIES_ON_ROLE FOREIGN KEY (role_id) REFERENCES roles (id);
 
 ALTER TABLE roles_in_companies
-    ADD CONSTRAINT FK_ROLES_IN_COMPANIES_ON_ROLEISSUER_UUID FOREIGN KEY (role_issuer_uuid) REFERENCES employees (uuid);*/
+    ADD CONSTRAINT FK_ROLES_IN_COMPANIES_ON_ROLEISSUER_UUID FOREIGN KEY (role_issuer_uuid) REFERENCES employees (uuid);

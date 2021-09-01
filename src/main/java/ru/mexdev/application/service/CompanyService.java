@@ -15,7 +15,7 @@ import java.util.UUID;
 @Service
 public class CompanyService {
 
-  private final static String ADMIN_ROLE_NAME = "ADMIN";
+  protected final static String COMPANY_GENERAL_ROLE_NAME = "ADMIN";
 
   @Autowired
   private CompanyRepository companyRepository;
@@ -34,9 +34,9 @@ public class CompanyService {
 
       Employee employee = new Employee();
       employeeRepository.save(employee);
-      Role role = roleRepository.findByName(ADMIN_ROLE_NAME).orElse(null);
+      Role role = roleRepository.findByName(COMPANY_GENERAL_ROLE_NAME).orElse(null);
       if (role == null) {
-        role = new Role(ADMIN_ROLE_NAME);
+        role = new Role(COMPANY_GENERAL_ROLE_NAME);
         roleRepository.save(role);
       }
       RoleInCompany roleInCompany = new RoleInCompany(element, role, null, employee);
