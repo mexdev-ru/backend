@@ -1,5 +1,5 @@
 # Our domen     
-mexdev.ru  
+http://mexdev.ru/  
 (now EC2 on AWS is offline)  
 # Confluence   
 https://mexdev-ru.atlassian.net/wiki/spaces/MONTANA/pages/4653139  
