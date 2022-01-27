@@ -42,7 +42,8 @@ public class CompanyService {
       RoleInCompany roleInCompany = new RoleInCompany(element, role, null, employee);
       roleInCompanyRepository.save(roleInCompany);
       employee.getRoles().add(roleInCompany);
-      employee.setUserId(userRepository.findById(UUID.fromString(authentication.getPrincipal().toString())).orElse(null));
+      employee.setUserId(userRepository.findById(UUID.fromString(authentication.getPrincipal()
+              .toString())).orElse(null));//TODO fix it
       employeeRepository.save(employee);
       return true;
     }
