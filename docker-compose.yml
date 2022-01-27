@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3.5"
 
 services:
   backend:
@@ -16,7 +16,7 @@ services:
       - data_base
       - keycloak
     networks:
-      - example
+      - montana
 
   keycloak:
     image: jboss/keycloak
@@ -36,7 +36,7 @@ services:
     links:
       - "keycloak_db:keycloak_db"
     networks:
-      example:
+      montana:
         aliases:
           - keylocal.vetermanve.com
 
@@ -47,7 +47,7 @@ services:
       - 5432:5432
     restart: unless-stopped
     networks:
-      - example
+      - montana
     volumes:
       #- .docker/initDB.sql:/docker-entrypoint-initdb.d/initDB.sql
       - service_db:/var/lib/postgresql/data
@@ -63,7 +63,7 @@ services:
       - "5431:5431"
     restart: unless-stopped
     networks:
-      - example
+      - montana
     volumes:
       - keycloak_db:/var/lib/postgresql/data
     environment:
@@ -75,5 +75,5 @@ volumes:
   service_db:
   keycloak_db:
 networks:
-  example:
-    name: keycloak_network
+  montana:
+    name: montana_network
