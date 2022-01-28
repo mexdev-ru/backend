@@ -74,6 +74,8 @@ services:
 volumes:
   service_db:
   keycloak_db:
+
 networks:
   montana:
+    external: true
     name: montana_network
