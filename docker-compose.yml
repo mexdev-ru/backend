@@ -23,6 +23,7 @@ services:
     container_name: keycloak
     ports:
       - "8080:8080"
+      - "8443:8443"
     environment:
       DB_VENDOR: POSTGRES
       DB_ADDR: keycloak_db
