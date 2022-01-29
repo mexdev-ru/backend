@@ -54,6 +54,10 @@ public class QuotaUsage {
     return counter;
   }
 
+  public int incrementCounter() {
+    return counter+=1;
+  }
+
   public User getUser() {
     return user;
   }
@@ -65,6 +69,5 @@ public class QuotaUsage {
   public QuotaUsage() {
 
   }
-
 
 }
