@@ -11,8 +11,10 @@ services:
     volumes:
       - ./:/app
     environment:
-      "spring.datasource.url": 'jdbc:postgresql://data_base:5432/customers?User=root&password=admin'
-      "keycloak.auth-server-url": '${KC_SERVICE_ADDR:-http://keycloak:8080/auth}'
+      SPRING_APPLICATION_JSON: '{
+            "spring.datasource.url": "jdbc:postgresql://data_base:5432/customers?User=root&password=admin",
+            "keycloak.auth-server-url": "${KC_SERVICE_ADDR:-http://keycloak:8080/auth}"
+          }'
     depends_on:
       - data_base
       - keycloak

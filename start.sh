@@ -1,2 +1,3 @@
 #!/bin/bash
-KC_SERVICE_ADD=https://kc.mexdev.ru/auth docker-compose up -d --build
+export KC_SERVICE_ADDR="https://kc.mexdev.ru/auth/"
+docker-compose up -d --build
