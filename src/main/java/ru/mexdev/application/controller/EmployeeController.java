@@ -4,6 +4,7 @@ import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.*;
 import ru.mexdev.application.entity.Employee;
 import ru.mexdev.application.entity.RoleInCompany;
@@ -12,8 +13,8 @@ import ru.mexdev.application.service.EmployeeService;
 import java.util.List;
 import java.util.UUID;
 
+@CrossOrigin(origins = "*")
 @RestController
-@CrossOrigin(origins = "http://localhost:8081")
 @RequestMapping("employee")
 public class EmployeeController {
 

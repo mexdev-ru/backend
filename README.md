@@ -1,3 +1,15 @@
+# Our domen     
+http://mexdev.ru/  
+uses Route53  
+(now EC2 on AWS is offline)  
+# Confluence   
+https://mexdev-ru.atlassian.net/wiki/spaces/MONTANA/pages/4653139  
+# Jira Kanban  
+https://mexdev-ru.atlassian.net/jira/software/c/projects/MON/boards/1  
+# Front     
+another repo in git, build with docker-compose up 
+# TODO      
+https://mexdev-ru.atlassian.net/wiki/spaces/MONTANA/pages/9011201/2021-08-17+upd+08-31  
 # Service 1 (User)
 ## Entity
 - User

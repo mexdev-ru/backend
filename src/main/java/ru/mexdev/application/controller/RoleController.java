@@ -3,14 +3,15 @@ package ru.mexdev.application.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.*;
 import ru.mexdev.application.entity.Role;
 import ru.mexdev.application.service.RoleService;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
-@CrossOrigin(origins = "http://localhost:8081")
 @RequestMapping("role")
 public class RoleController {
   
