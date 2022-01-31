@@ -2,9 +2,11 @@ package ru.mexdev.application.config;
 
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.keycloak.OAuth2Constants;
+import org.keycloak.adapters.springboot.KeycloakSpringBootProperties;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
-
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+@EnableConfigurationProperties(KeycloakSpringBootProperties.class)
 public class KeycloakConfig {
 
   static Keycloak keycloak = null;

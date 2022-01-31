@@ -81,13 +81,13 @@ public class UserController {
 
   @RequestMapping(method = RequestMethod.POST, path = "")
   public ResponseEntity<?> create(@RequestBody User user) {
+
     HttpStatus kcUserHttpStatus = HttpStatus.valueOf(kcAdminClient.create(user));
     if (kcUserHttpStatus.equals(HttpStatus.CREATED)) {
+      List<UserRepresentation> ur = KeycloakConfig.getInstance().realm(KeycloakConfig.realm).users()
+              .search(user.getEmail(), user.getFirstName(), user.getLastName(), user.getEmail(), 0, 1);
 
-      user.setUuid(UUID.fromString(
-          KeycloakConfig.getInstance().realm(KeycloakConfig.realm).users()
-              .search(user.getEmail(), user.getFirstName(), user.getLastName(), user.getEmail(), 0, 1).get(0).getId()));
-
+      user.setUuid(UUID.fromString(ur.get(0).getId()));
       userService.create(user);
     }
     return new ResponseEntity<>(kcUserHttpStatus);
