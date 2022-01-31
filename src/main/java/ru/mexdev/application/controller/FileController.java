@@ -1,45 +1,76 @@
 package ru.mexdev.application.controller;
 
-import ru.mexdev.application.dto.FileDto;
-import ru.mexdev.application.service.MinioService;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import ru.mexdev.application.entity.FileResponse;
+import ru.mexdev.application.service.FileStorageService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.AntPathMatcher;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-
-import static org.springframework.web.servlet.HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE;
-
-@Slf4j
-@RestController
-@RequestMapping(value = "/file")
+@Controller
+@RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@RequestMapping(value = "/v1/files", produces = {"application/json", "application/xml", "application/hal+json"})
+@Tag(name = "files", description = "File Service")
 public class FileController {
 
-    @Autowired
-    private MinioService minioService;
+    FileStorageService fileStorageService;
 
-    @GetMapping
-    public ResponseEntity<Object> getFiles() {
-        return ResponseEntity.ok(minioService.getListObjects());
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Upload a File")
+    public ResponseEntity<FileResponse> fileUpload(@RequestPart("file") MultipartFile file) {
+        FileResponse response = fileStorageService.addFile(file);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping(value = "/**")
-    public ResponseEntity<Object> getFile(HttpServletRequest request) throws IOException {
-        String pattern = (String) request.getAttribute(BEST_MATCHING_PATTERN_ATTRIBUTE);
-        String filename = new AntPathMatcher().extractPathWithinPattern(pattern, request.getServletPath());
-        return ResponseEntity.ok()
+    @GetMapping("/view/{file}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "View a File")
+    public ResponseEntity<InputStreamResource> viewFile(@PathVariable String file) {
+        FileResponse source = fileStorageService.getFile(file);
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.parseMediaType(source.getContentType()))
+                .contentLength(source.getFileSize())
+                .header("Content-disposition", "attachment; filename=" + source.getFilename())
+                .body(source.getStream());
+    }
+
+    @GetMapping("/download/{file}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Download a File")
+    public ResponseEntity<InputStreamResource> downloadFile(@PathVariable String file) {
+        FileResponse source = fileStorageService.getFile(file);
+        return ResponseEntity
+                .ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(IOUtils.toByteArray(minioService.getObject(filename)));
+                .contentLength(source.getFileSize())
+                .header("Content-disposition", "attachment; filename=" + source.getFilename())
+                .body(source.getStream());
     }
 
-    @PostMapping(value = "/upload")
-    public ResponseEntity<Object> upload(@ModelAttribute FileDto request) {
-        return ResponseEntity.ok().body(minioService.uploadFile(request));
+    @DeleteMapping("/{file}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Delete a File")
+    public Object removeFile(@PathVariable String file) {
+        fileStorageService.deleteFile(file);
+        return ResponseEntity.noContent();
     }
 
+    @GetMapping("/{file}/detail")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get File Detail")
+    public ResponseEntity<FileResponse> getFileDetail(@PathVariable String file) {
+        FileResponse response = fileStorageService.getFileDetails(file);
+        return ResponseEntity.ok(response);
+    }
 }
