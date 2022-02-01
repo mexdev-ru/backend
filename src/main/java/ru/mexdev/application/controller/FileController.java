@@ -15,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -23,20 +25,35 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileController {
 
     FileStorageService fileStorageService;
+    //FileService fileService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Upload a File")
     public ResponseEntity<FileResponse> fileUpload(@RequestPart("file") MultipartFile file) {
         FileResponse response = fileStorageService.addFile(file);
+        //TODO bad return now. need to check addFile(t/f)
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/viewall")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "View all Files")
+//    @RequestMapping(method = RequestMethod.GET, path = "/all")
+    public ResponseEntity<List<FileResponse>> viewAllFiles() {
+
+            final List<FileResponse> allFiles = fileStorageService.readAll();
+            return allFiles != null
+                    ? new ResponseEntity<>(allFiles, HttpStatus.OK)
+                    : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
     }
 
     @GetMapping("/view/{file}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "View a File")
-    public ResponseEntity<InputStreamResource> viewFile(@PathVariable String file) {
-        FileResponse source = fileStorageService.getFile(file);
+    public ResponseEntity<InputStreamResource> viewFile(@PathVariable String uuid) {
+        FileResponse source = fileStorageService.getFile(uuid);
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.parseMediaType(source.getContentType()))
@@ -61,7 +78,7 @@ public class FileController {
     @DeleteMapping("/{file}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete a File")
-    public Object removeFile(@PathVariable String file) {
+    public ResponseEntity.HeadersBuilder<?> removeFile(@PathVariable String file) {
         fileStorageService.deleteFile(file);
         return ResponseEntity.noContent();
     }

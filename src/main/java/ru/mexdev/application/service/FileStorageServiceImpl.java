@@ -2,6 +2,7 @@ package ru.mexdev.application.service;
 
 import com.jlefebure.spring.boot.minio.MinioException;
 import com.jlefebure.spring.boot.minio.MinioService;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.mexdev.application.mapper.FileResponseMapper;
 import ru.mexdev.application.entity.FileResponse;
 import lombok.AccessLevel;
@@ -12,10 +13,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.mexdev.application.repository.FileRepository;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -23,17 +27,32 @@ import java.nio.file.Path;
 @RequiredArgsConstructor
 @Slf4j
 public class FileStorageServiceImpl implements FileStorageService {
+    @Autowired
+    private FileRepository fileRepository;
 
     MinioService minioService;
-
     FileResponseMapper fileResponseMapper;
 
     @Override
     public FileResponse addFile(MultipartFile file) {
-        Path path = Path.of(file.getOriginalFilename());
+        Path path = Path.of(UUID.randomUUID().toString());
+        /*Path path = Path.of(file.getOriginalFilename());*/
+        System.out.println(file.getOriginalFilename());
+        System.out.println(path);
         try {
             minioService.upload(path, file.getInputStream(), file.getContentType());
             var metadata = minioService.getMetadata(path);
+
+            //fileRepository.save(fileResponseMapper.fileAddResponse(metadata));
+            //TODO
+            //file.getName();
+            FileResponse fileResponse = new FileResponse(UUID.fromString(path.toString()), file.getName(),
+                    file.getContentType(), file.getSize(),
+                    metadata.createdTime(), new InputStreamResource(file.getInputStream()));
+            fileResponse.setUuid(UUID.fromString(path.toString()));
+            System.out.println(fileResponse.getUuid());
+            fileRepository.save(fileResponse);
+
             log.info("this file {} storage in bucket: {} on date: {}", metadata.name(), metadata.bucketName(), metadata.createdTime());
             return fileResponseMapper.fileAddResponse(metadata);
         } catch (IOException | MinioException ex) {
@@ -43,8 +62,12 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     @SneakyThrows
     @Override
-    public void deleteFile(String filename) {
-        Path path = Path.of(filename);
+    public List<FileResponse> readAll() { return fileRepository.findAll();  }
+
+    @SneakyThrows
+    @Override
+    public void deleteFile(String uuid) {
+        Path path = Path.of(uuid);
         var metadata = minioService.getMetadata(path);
         minioService.remove(path);
         log.info("this file {} removed in bucket: {} on date: {}", metadata.name(), metadata.bucketName(), metadata.createdTime());
@@ -52,8 +75,8 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     @SneakyThrows
     @Override
-    public FileResponse getFile(String filename) {
-        Path path = Path.of(filename);
+    public FileResponse getFile(String uuid) {
+        Path path = Path.of(uuid);
         var metadata = minioService.getMetadata(path);
 
         InputStream inputStream = minioService.get(path);
@@ -70,9 +93,11 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     @SneakyThrows
     @Override
-    public FileResponse getFileDetails(String fileName) {
-        Path path = Path.of(fileName);
+    public FileResponse getFileDetails(String uuid) {
+        Path path = Path.of(uuid);
         var metadata = minioService.getMetadata(path);
         return fileResponseMapper.fileGetResponse(metadata);
     }
+
+
 }
