@@ -10,6 +10,9 @@ https://mexdev-ru.atlassian.net/jira/software/c/projects/MON/boards/1
 another repo in git, build with docker-compose up 
 # TODO      
 https://mexdev-ru.atlassian.net/wiki/spaces/MONTANA/pages/9011201/2021-08-17+upd+08-31  
+
+# Swagger link (file downloader)
+- http://localhost:8082/swagger-ui/index.html?configUrl=/api/api-docs/swagger-config
 # Service 1 (User)
 ## Entity
 - User
