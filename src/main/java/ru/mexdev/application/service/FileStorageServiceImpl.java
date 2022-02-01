@@ -38,7 +38,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         Path path = Path.of(UUID.randomUUID().toString());
         /*Path path = Path.of(file.getOriginalFilename());*/
         System.out.println(file.getOriginalFilename());
-        System.out.println(path);
+        System.out.println(path);//Correct UUID
         try {
             minioService.upload(path, file.getInputStream(), file.getContentType());
             var metadata = minioService.getMetadata(path);
@@ -50,8 +50,8 @@ public class FileStorageServiceImpl implements FileStorageService {
                     file.getContentType(), file.getSize(),
                     metadata.createdTime(), new InputStreamResource(file.getInputStream()));
             fileResponse.setUuid(UUID.fromString(path.toString()));
-            System.out.println(fileResponse.getUuid());
-            fileRepository.save(fileResponse);
+            System.out.println(fileResponse.getUuid());// Correct UUID
+            fileRepository.save(fileResponse);//?? Maybe problem with save() ??
 
             log.info("this file {} storage in bucket: {} on date: {}", metadata.name(), metadata.bucketName(), metadata.createdTime());
             return fileResponseMapper.fileAddResponse(metadata);
@@ -62,7 +62,7 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     @SneakyThrows
     @Override
-    public List<FileResponse> readAll() { return fileRepository.findAll();  }
+    public List<FileResponse> readAll() { return fileRepository.findAll();  }//Returns some Hrenota. Wrong UUIDs
 
     @SneakyThrows
     @Override
